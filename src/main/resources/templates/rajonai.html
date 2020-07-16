@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title> NT rinka </title>
+	  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	  <link rel="stylesheet" href="jqueryui.css">
+	<style>
+		h3 {
+	 		text-align:center;
+		}
+		
+		nav a {
+		display: inline-block;
+		padding: 12px;
+		margin: 12px;
+		text-decoration: none;
+		color: Black;
+		background-color: #CAB85C;
+		-webkit-border-radius: 8px;
+		-moz-border-radius: 8px;
+		border-radius: 8px;		
+		-webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+		-moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+		box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);		
+	}
+	nav a:hover {
+		text-decoration: underline;	
+		background-color: #E3F392;	
+	}
+	
+	div {
+		 margin: auto;
+		  width: 50%;
+		  padding: 10px;
+	}
+	body {
+	
+		background-color: #F4F6F6; 
+		text-align:center;
+		}	
+	</style>
+</head>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+
+function iLentele( duomenai ) {
+
+	lentele = '<table id="dataTable">';   
+    lentele +=  	 '<tr>';  
+    lentele +=   		'<th>Pavadinimas</th>';  
+    lentele +=   		'<th>Ar mieste</th>';  
+    lentele +=   		'<th>Apskritis</th>';  
+    lentele +=     		 '<th>Id</th>';    
+    lentele +=   	'</tr>'  
+    
+    for ( i = 0; i < duomenai.length; i++ ) {
+ 
+	    lentele +=  	 '<tr>';  
+	    lentele +=   		'<td>' + duomenai [ i ].pav + '</td>';  
+	    lentele +=   		'<td>' + ( duomenai [ i ].flag_miesto ? 'Taip' : 'Ne' )  + '</td>'; 
+	    lentele +=   		'<td>' + duomenai [ i ].id_apskrities + '</td>';  
+	    lentele +=     		'<td>' + duomenai [ i ].id + '</td>';    
+	    lentele +=   	'</tr>'   
+    	
+    }
+    lentele += '</table>'; 
+    
+    return lentele;   
+}
+
+$( function () {
+
+	$.ajax({
+	
+		url: "http://localhost:8080/ajax/lst-rajonai"
+			
+			
+		
+		}).done( function( rajonai ) {
+			
+			$( '#display' ).html  ( JSON.stringify ( rajonai ) );
+			$( '#lenta' ).html ( iLentele ( rajonai ) );
+		})
+	});
+</script>
+<body>
+<div>
+<h3> Apie programą</h3>
+
+ 	Programa skirta tvarkyti NT objektus doumenų bazėje. Juos galima redaguoti, parduoti.
+</div>
+<div id="display">
+
+</div>
+<div id="lenta">
+
+</div>
+
+ 	</body>
+</html>
