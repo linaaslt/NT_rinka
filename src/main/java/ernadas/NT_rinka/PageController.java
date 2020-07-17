@@ -37,22 +37,47 @@ import org.springframework.web.bind.annotation.RequestParam;
 		    		, @RequestParam(required=false) String flag_miesto
 		    		, @RequestParam(required=false) String id_apskrities
 		    		, @RequestParam(required=false) String pav
+		    		, @RequestParam(required=false) String irasas
 		    		, Model model 
 		    	) {
 			 
-		//	 	if ( lentele != null ) {
+			 	if ( irasas != null ) {
 			 		
-			 		// Rajonai rajonas = new Rajonai(id, flag_miesto, id_apskrities, pav);
+			 		Rajonai rajonas = new Rajonai(FormPrepare.takeId (id), FormPrepare.takeId (flag_miesto), FormPrepare.takeId(id_apskrities), pav);
 			 	
-	/*		 		if ( irasas.equals ( "papildyti" ) ) {
+			 		if ( irasas.equals ( "papildyti" ) ) {
 			 			
-			 			menininkai_repository.save( kurejai );
+			 			rajonai_repository.save( rajonas );
 			 		}
-	*/		 		
-	//		 	}
+		 		
+			 	}
 		    	
 		    	model.addAttribute("rajonai", rajonai_repository.findAll() );
 		       // model.addAttribute("lst_menu", Menu.values() );    	
 		        return "rajonai";
+		    }
+		 
+		 @RequestMapping("/apskritys")
+		    public String apskritys(
+		    		@RequestParam(required=false) String id	    		
+		    		, @RequestParam(required=false) String pav
+		    		, @RequestParam(required=false) String irasas
+		    		, Model model 
+		    	) {
+			 
+			 	if ( irasas != null ) {
+			 		
+			 		Apskritys apskritis = new Apskritys (FormPrepare.takeId (id), pav);
+			 	
+			 		if ( irasas.equals ( "papildyti" ) ) {
+			 			
+			 			apskritys_repository.save( apskritis );
+			 		}
+		 		
+			 	}
+		    	
+		    	model.addAttribute("apskritys", apskritys_repository.findAll() );
+		       // model.addAttribute("lst_menu", Menu.values() );    	
+		        return "apskritys";
 		    }
 }

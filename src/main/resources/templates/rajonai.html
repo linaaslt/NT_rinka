@@ -45,6 +45,23 @@
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
 
+function dropDown ( duomenys, id_name, label ) {
+
+	selectas =	'<label for="' + id_name + '">' + label + '</label>';
+		
+	selectas += '<select name="' + id_name + '" id="' + id_name + '">';
+	
+	for (i = 0; i < duomenys.length; i++) {
+	
+		selectas += '<option value="' + duomenys [ i ].id + '">' + duomenys [ i ].pav + '</option>'
+				
+	}
+	
+	selectas += '</select>';	
+	
+	return selectas;
+}
+
 function iLentele( duomenai ) {
 
 	lentele = '<table id="dataTable">';   
@@ -70,7 +87,7 @@ function iLentele( duomenai ) {
     return lentele;   
 }
 
-$( function () {
+function takeRajonai() {
 
 	$.ajax({
 	
@@ -78,11 +95,173 @@ $( function () {
 			
 			
 		
-		}).done( function( rajonai ) {
+	}).done( function( rajonai ) {
 			
-			$( '#display' ).html  ( JSON.stringify ( rajonai ) );
-			$( '#lenta' ).html ( iLentele ( rajonai ) );
-		})
+		$( '#display' ).html  ( JSON.stringify ( rajonai ) );
+		$( '#lenta' ).html ( iLentele ( rajonai ) );
+	});
+}
+
+$( function () {
+
+
+		takeRajonai();
+
+		$.ajax({
+		
+			url: "http://localhost:8080/ajax/lst-apskritys"
+				
+				
+			
+		}).done( function( apskritys ) {
+				
+			$( '#sel_place' ).html ( dropDown (apskritys, 'id_apskrities', 'Parinkite apskritį : ' ) );
+				
+		});
+			
+			var dialog, form,
+		   
+		      // From http://www.whatwg.org/specs/web-apps/current-work/multipage/states-of-the-type-attribute.html#e-mail-state-%28type=email%29
+		      rajonai = $( "#rajonai" ),
+		      flag_miesto = $( "#flag_miesto" ),
+		      id_apskrities = $( "#id_apskrities" ),
+		      pav =$("#pav")
+		      allFields = $( [] ).add( rajonai ).add( flag_miesto ).add( id_apskrities ).add( pav ),
+		      tips = $( ".validateTips" );
+		 
+		    function updateTips( t ) {
+		      tips
+		        .text( t )
+		        .addClass( "ui-state-highlight" );
+		      setTimeout(function() {
+		        tips.removeClass( "ui-state-highlight", 1500 );
+		      }, 500 );
+		    }
+		 
+		    function checkLength( o, n, min, max ) {
+		      if ( o.val().length > max || o.val().length < min ) {
+		        o.addClass( "ui-state-error" );
+		        updateTips( "Length of " + n + " must be between " +
+		          min + " and " + max + "." );
+		        return false;
+		      } else {
+		        return true;
+		      }
+		    }
+		 
+		    function checkRegexp( o, regexp, n ) {
+		      if ( !( regexp.test( o.val() ) ) ) {
+		        o.addClass( "ui-state-error" );
+		        updateTips( n );
+		        return false;
+		      } else {
+		        return true;
+		      }
+		    }
+		 
+		    function addRajonas() {
+		      var valid = true;
+		      allFields.removeClass( "ui-state-error" );
+		 /*
+			  valid = valid && checkLength( laikytojas, "laikytojas", 3, 64 );
+		      valid = valid && checkLength( pav, "pav", 3, 64 );
+		      valid = valid && checkLength( meno_kryptis, "kryptis_meno", 6, 32 );
+		      valid = valid && checkLength( miestas, "miestas", 4, 32 );
+		      valid = valid && checkLength( valstybe, "valstybe", 4, 32 );
+		 
+		      valid = valid && checkRegexp( pav, /^[a-zA-ZąčęėįšųūžĄČĘĖĮŠŲŪŽ]([0-9a-zA-ZąčęėįšųūžĄČĘĖĮŠŲŪŽ_\s])+$/i, "Pav turi būti iš raidžių, skaitmenų, pabraukimo, tarpo ir turi prasidėti raide." );
+		      valid = valid && checkRegexp( miestas, /^[a-zA-ZąčęėįšųūžĄČĘĖĮŠŲŪŽ]([0-9a-zA-ZąčęėįšųūžĄČĘĖĮŠŲŪŽ-\s])+$/i, "Miestas turi būti iš raidžių, skaitmenų, pabraukimo, tarpo ir turi prasidėti raide." );
+		      valid = valid && checkRegexp( valstybe, /^[a-zA-ZąčęėįšųūžĄČĘĖĮŠŲŪŽ]([0-9a-zA-ZąčęėįšųūžĄČĘĖĮŠŲŪŽ-\s])+$/i, "Valstybe turi būti iš raidžių, skaitmenų, pabraukimo, tarpo ir turi prasidėti raide." );
+		 */
+		  
+		      alert ( valid );      
+		      if ( valid ) {
+
+				$.ajax({
+					  method: "POST",
+					  url: "/ajax/rajonas-save",
+					  data: { 
+					  	flag_miesto: ( $( '#flag_miesto' ).is(":checked") ? '1' : '0' )
+					  	, id_apskrities: $( '#id_apskrities' ).val()
+					  	, pav: $( '#pav' ).val()
+					  	, irasas: 'papildyti'
+					  }
+				})
+					  .done( function( msg ) {
+					    alert( "Data Saved: " + msg );
+					    
+					    takeRajonai();
+				 });
+		      
+		   
+		        dialog.dialog( "close" );
+		
+		      }
+		      return valid;
+		    }
+		 
+		    dialog = $( "#dialog-form" ).dialog({
+		    
+		      autoOpen: false,
+		      height: 400,
+		      width: 350,
+		      modal: true,
+		      buttons: {
+		        "Išsaugoti": addRajonas /*function() {
+		        
+		        	if ( addRajonas() ) {
+		        	
+		        		alert ( $('#pav').val() );
+		        	
+		        		form.submit();
+		        	}
+		        }*/,
+		        "Atšaukti": function() {
+		        
+		         form[ 0 ].reset();       
+		          dialog.dialog( "close" );
+		        }
+		      },
+		      close: function() {
+		
+		        allFields.removeClass( "ui-state-error" );
+		      }
+		    });
+		 
+		    form = dialog.find( "form" );
+		 
+		    $( "#irasas" ).button().on( "click", function() {
+		      dialog.dialog( "open" );
+		    });
+		    
+		    $( '.pakeisti' ).each( function () {
+	    
+	    	$( this ).click( function() {
+	    
+		    	id= $( this ).parent().parent().data( 'idx' );
+		    	
+		    	alert ( id );
+		     
+		   		$.ajax({
+			
+					url: "http://localhost:8080/ajax/rajonai?id=" + id
+									
+				}).done( 
+				
+					function ( rajonas ) {
+					
+						console.log ( rajonas ); 
+					
+						$( '#idr' ).val( rajonas.id  )		
+						$( '#flag_miesto' ).val( rajonas.flag_miesto )
+						$( '#id_apskrities' ).val( rajonas.id_apskrities )		
+						$( '#pav' ).val( rajonas.pav )					
+						$ ('#irasas' ).val ( 'pakeisti' ); 	
+						dialog.dialog( "open" );					
+					}
+				);
+			}); 
+	    });
 	});
 </script>
 <body>
@@ -90,8 +269,24 @@ $( function () {
 <h3> Apie programą</h3>
 
  	Programa skirta tvarkyti NT objektus doumenų bazėje. Juos galima redaguoti, parduoti.
+ 	<input type="button" id="irasas" value="papildyti">
+	<div id="dialog-form" class="forma" title="rajonas">	
+		<form id="frm_rajonas" method="post" action="">
+		<label for="pav">Ar mieste</label>
+		<input type="checkbox" id="flag_mieste" name="flag_mieste" inputValue="1">
+		<div id="sel_place">
+		</div>
+		<label for="pav">Pavadinimas</label>
+		<input type="text" id="pav" name="pav">		
+		<input type="hidden" name="irasas" id="irasas" value="papildyti">
+		
+      <!-- Allow form submission with keyboard without duplicating the dialog button -->
+      <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">						
+	</form>
+	</div>
 </div>
 <div id="display">
+
 
 </div>
 <div id="lenta">

@@ -11,7 +11,6 @@ public class Apskritys {
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	 private Integer id;
-	
 	 private String pav;
 	
 	 public Apskritys (Integer id, String pav) {
@@ -19,6 +18,10 @@ public class Apskritys {
 		 this.id = id;
 		 this.pav = pav;
 		 
+	 }
+	 
+	 public Apskritys () {
+		 super ();
 	 }
 
 	 public Integer getId() {
