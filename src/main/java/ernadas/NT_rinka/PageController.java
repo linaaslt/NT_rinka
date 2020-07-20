@@ -80,4 +80,47 @@ import org.springframework.web.bind.annotation.RequestParam;
 		       // model.addAttribute("lst_menu", Menu.values() );    	
 		        return "apskritys";
 		    }
+		 
+		 @RequestMapping("/pastatai")
+		    public String pastatai(
+		    	
+		    		@RequestParam(required=false) String id	    		
+		    		, @RequestParam(required=false) String adresas
+		    		, @RequestParam(required=false) String aukstu_sk
+		    		, @RequestParam(required=false) String kvad_gyv
+		    		, @RequestParam(required=false) String kvad_kom
+		    		, @RequestParam(required=false) String kaina_nuo_gyv
+		    		, @RequestParam(required=false) String kaina_nuo_kom
+		    		, @RequestParam(required=false) String kaina_iki_gyv
+		    		, @RequestParam(required=false) String kaina_iki_kom
+		    		, @RequestParam(required=false) String id_rajono
+		    		, @RequestParam(required=false) String irasas
+		    		, Model model 
+		    	) {
+			 
+			 	if ( irasas != null ) {
+			 		
+			 		Pastatai pastatas = new Pastatai (FormPrepare.takeId ( id )
+			 				, adresas
+			 				, FormPrepare.takeId ( aukstu_sk )
+			 				, FormPrepare.takeId ( kvad_gyv )
+			 				, FormPrepare.takeId ( kvad_kom )
+			 				, FormPrepare.takeId ( kaina_nuo_gyv )
+			 				, FormPrepare.takeId ( kaina_nuo_kom )
+			 				, FormPrepare.takeId ( kaina_iki_gyv )
+			 				, FormPrepare.takeId ( kaina_iki_kom )
+			 				, FormPrepare.takeId ( id_rajono )
+			 				);
+			 	
+			 		if ( irasas.equals ( "papildyti" ) ) {
+			 			
+			 			pastatai_repository.save( pastatas );
+			 		}
+		 		
+			 	}
+		    	
+		    	model.addAttribute("pastatai", pastatai_repository.findAll() );
+		       // model.addAttribute("lst_menu", Menu.values() );    	
+		        return "pastatai";
+		    }
 }

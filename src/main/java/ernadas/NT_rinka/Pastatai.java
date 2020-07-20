@@ -45,6 +45,10 @@ public class Pastatai {
 		this.kaina_iki_kom = kaina_iki_kom;
 		this.id_rajono = id_rajono;
 	}
+	
+	public Pastatai () {
+		super();
+	}
 
 	public Integer getId() {
 		return id;

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title> NT rinka </title>
+	  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	  <link rel="stylesheet" href="jqueryui.css">
+	<style>
+		h3 {
+	 		text-align:center;
+		}
+		
+		nav a {
+		display: inline-block;
+		padding: 12px;
+		margin: 12px;
+		text-decoration: none;
+		color: Black;
+		background-color: #CAB85C;
+		-webkit-border-radius: 8px;
+		-moz-border-radius: 8px;
+		border-radius: 8px;		
+		-webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+		-moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+		box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);		
+	}
+	nav a:hover {
+		text-decoration: underline;	
+		background-color: #E3F392;	
+	}
+	
+	div {
+		 margin: auto;
+		  width: 50%;
+		  padding: 10px;
+	}
+	body {
+	
+		background-color: #F4F6F6; 
+		text-align:center;
+		}	
+	</style>
+</head>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+
+function dropDown ( duomenys, id_name, label ) {
+
+	selectas =	'<label for="' + id_name + '">' + label + '</label>';
+		
+	selectas += '<select name="' + id_name + '" id="' + id_name + '">';
+	
+	for (i = 0; i < duomenys.length; i++) {
+	
+		selectas += '<option value="' + duomenys [ i ].id + '">' + duomenys [ i ].pav + '</option>'
+				
+	}
+	
+	selectas += '</select>';	
+	
+	return selectas;
+}
+
+function iLentele( duomenai ) {
+
+	lentele = '<table id="dataTable">';   
+    lentele +=  	 '<tr>';
+    lentele +=   		'<th>Veiksmai</th>';  
+    lentele +=   		'<th>Adresas</th>';  
+    lentele +=   		'<th>Aukstu skaičius</th>';  
+    lentele +=   		'<th>Kvadratų gyvenamo ploto</th>';
+    lentele +=   		'<th>Kvadratų komercinio ploto</th>';  
+    lentele +=   		'<th>Kaina kvadrato gyvenamo ploto, minimum</th>';  
+    lentele +=   		'<th>Kaina kvadrato komercinio ploto, minimum</th>'; 
+	lentele +=   		'<th>Kaina kvadrato gyvenamo ploto, maksimum</th>';  
+    lentele +=   		'<th>Kaina kvadrato komercinio ploto, maksimum</th>';
+    lentele +=   		'<th>Id rajono</th>';       
+    lentele +=   	'</tr>'  
+    
+    for ( i = 0; i < duomenai.length; i++ ) {
+ 
+	    lentele +=  	 '<tr data-id="' + duomenai [ i ].id + '">';  
+	    lentele +=   		'<td><input type="button" class="del" value="&cross;"> </td>'; 	    
+	    lentele +=   		'<td>' + duomenai [ i ].adresas + '</td>';  
+	    lentele +=   		'<td>' + duomenai [ i ].aukstu_sk  + '</td>'; 
+	    lentele +=   		'<td>' + duomenai [ i ].kvad_gyv + '</td>';  
+	    lentele +=     		'<td>' + duomenai [ i ].kvad_kom + '</td>'; 
+	   	lentele +=   		'<td>' + duomenai [ i ].kaina_nuo_gyv + '</td>';  
+	    lentele +=     		'<td>' + duomenai [ i ].kaina_nuo_kom + '</td>';
+	   	lentele +=   		'<td>' + duomenai [ i ].kaina_iki_gyv + '</td>';  
+	    lentele +=     		'<td>' + duomenai [ i ].kaina_iki_kom + '</td>';   
+	    lentele +=     		'<td>' + duomenai [ i ].id_rajono + '</td>'; 
+	    lentele +=   	'</tr>'   
+    	
+    }
+   
+    lentele += '</table>'; 
+    
+    return lentele;   
+}
+
+function delSet () {
+
+/*	alert_done = false;
+	
+	alert ( 'before del set' );	
+*/	
+	$( '.del' ).each ( function() {
+	
+			url_del = '/ajax/pastatas-salinti';
+			del_id = $( this ).parent().parent().data( 'id' );
+			
+		/*	if ( ! alert_done ) {
+			
+				alert ( 'seting first record id :' + del_id );
+				alert_done = true;
+			} */		
+	    
+	    	$( this ).click( function() {
+	    	
+	    		//	alert ( 'deleting record : ' + del_id );
+	    	    		
+				    $.ajax({
+				    
+					  method: "POST",
+					  url: url_del,
+					  data: { 
+					  	id: del_id
+					  	, irasas: 'trinti'
+					  }
+					  
+					}).done( function( msg ) {
+					  
+				//	    alert( "Record deletion: " + msg );
+					    takePastatai();
+					});	    		 	
+	    	 });
+		});
+	//	alert ( 'after del set' );
+}
+
+function takePastatai() {
+
+	$.ajax({
+	
+		url: "http://localhost:8080/ajax/lst-pastatai"
+			
+			
+		
+	}).done( function( pastatai ) {
+			
+		$( '#display' ).html  ( JSON.stringify ( pastatai ) );
+		$( '#lenta' ).html ( iLentele ( pastatai ) );
+		delSet();
+	});				
+}
+
+
+
+$( function () {
+
+
+		takePastatai();
+
+		$.ajax({
+		
+			url: "http://localhost:8080/ajax/lst-rajonai"
+				
+				
+			
+		}).done( function( rajonai ) {
+				
+			$( '#sel_place' ).html ( dropDown (rajonai, 'id_rajono', 'Parinkite rajoną: ' ) );
+				
+		});
+			
+			var dialog, form,
+		   
+		      // From http://www.whatwg.org/specs/web-apps/current-work/multipage/states-of-the-type-attribute.html#e-mail-state-%28type=email%29
+		      pastatai = $( "#pastatai" ),
+		      adresas = $( "#adresas" ),
+		      aukstu_sk = $( "#aukstu_sk" ),
+		      kvad_gyv = $("#kvad_gyv"),
+		      kvad_kom = $("#kvad_kom"),
+		      kaina_nuo_gyv = $("#kaina_nuo_gyv"),
+		      kaina_nuo_kom = $("#kaina_nuo_kom"),
+		      kaina_iki_gyv = $("#kaina_iki_gyv"),
+		      kaina_iki_kom = $("#kaina_iki_kom")
+		      id_rajono = $("#id_rajono"),
+		      allFields = $( [] )
+		      .add( pastatai )
+		      .add( adresas )
+		      .add( aukstu_sk )
+		      .add( kvad_gyv )
+		      .add( kvad_kom )
+		      .add( kaina_nuo_gyv )
+		      .add( kaina_nuo_kom )
+		      .add( kaina_iki_gyv )
+		      .add( kaina_iki_kom )
+		      .add ( id_rajono ),
+		      tips = $( ".validateTips" );
+		 
+		    function updateTips( t ) {
+		      tips
+		        .text( t )
+		        .addClass( "ui-state-highlight" );
+		      setTimeout(function() {
+		        tips.removeClass( "ui-state-highlight", 1500 );
+		      }, 500 );
+		    }
+		 
+		    function checkLength( o, n, min, max ) {
+		      if ( o.val().length > max || o.val().length < min ) {
+		        o.addClass( "ui-state-error" );
+		        updateTips( "Length of " + n + " must be between " +
+		          min + " and " + max + "." );
+		        return false;
+		      } else {
+		        return true;
+		      }
+		    }
+		 
+		    function checkRegexp( o, regexp, n ) {
+		      if ( !( regexp.test( o.val() ) ) ) {
+		        o.addClass( "ui-state-error" );
+		        updateTips( n );
+		        return false;
+		      } else {
+		        return true;
+		      }
+		    }
+		 
+		    function addPastatas() {
+		      var valid = true;
+		      allFields.removeClass( "ui-state-error" );
+		 /*
+			  valid = valid && checkLength( laikytojas, "laikytojas", 3, 64 );
+		      valid = valid && checkLength( pav, "pav", 3, 64 );
+		      valid = valid && checkLength( meno_kryptis, "kryptis_meno", 6, 32 );
+		      valid = valid && checkLength( miestas, "miestas", 4, 32 );
+		      valid = valid && checkLength( valstybe, "valstybe", 4, 32 );
+		 
+		      valid = valid && checkRegexp( pav, /^[a-zA-ZąčęėįšųūžĄČĘĖĮŠŲŪŽ]([0-9a-zA-ZąčęėįšųūžĄČĘĖĮŠŲŪŽ_\s])+$/i, "Pav turi būti iš raidžių, skaitmenų, pabraukimo, tarpo ir turi prasidėti raide." );
+		      valid = valid && checkRegexp( miestas, /^[a-zA-ZąčęėįšųūžĄČĘĖĮŠŲŪŽ]([0-9a-zA-ZąčęėįšųūžĄČĘĖĮŠŲŪŽ-\s])+$/i, "Miestas turi būti iš raidžių, skaitmenų, pabraukimo, tarpo ir turi prasidėti raide." );
+		      valid = valid && checkRegexp( valstybe, /^[a-zA-ZąčęėįšųūžĄČĘĖĮŠŲŪŽ]([0-9a-zA-ZąčęėįšųūžĄČĘĖĮŠŲŪŽ-\s])+$/i, "Valstybe turi būti iš raidžių, skaitmenų, pabraukimo, tarpo ir turi prasidėti raide." );
+		 */
+		  
+		      alert ( valid );      
+		      if ( valid ) {
+
+				$.ajax({
+					  method: "POST",
+					  url: "/ajax/pastatas-save",
+					  data: { 
+					  	adresas: $( "#adresas" ).val()
+					    , aukstu_sk: $( "#aukstu_sk" ).val()
+					    , kvad_gyv: $("#kvad_gyv").val()
+					    , kvad_kom: $("#kvad_kom").val()
+					    , kaina_nuo_gyv: $("#kaina_nuo_gyv").val()
+					    , kaina_nuo_kom: $("#kaina_nuo_kom").val()
+					    , kaina_iki_gyv: $("#kaina_iki_gyv").val()
+					    , kaina_iki_kom: $("#kaina_iki_kom").val()
+					    , id_rajono: $("#id_rajono").val()
+					  	, irasas: 'papildyti'
+					  }
+				})
+					  .done( function( msg ) {
+					    alert( "Data Saved: " + msg );
+					    
+					    takePastatai();
+				 });
+		      
+		   
+		        dialog.dialog( "close" );
+		
+		      }
+		      return valid;
+		    }
+		 
+		    dialog = $( "#dialog-form" ).dialog({
+		    
+		      autoOpen: false,
+		      height: 400,
+		      width: 350,
+		      modal: true,
+		      buttons: {
+		        "Išsaugoti": addPastatas /*function() {
+		        
+		        	if ( addPastatas() ) {
+		        	
+		        		alert ( $('#pav').val() );
+		        	
+		        		form.submit();
+		        	}
+		        }*/,
+		        "Atšaukti": function() {
+		        
+		         form[ 0 ].reset();       
+		          dialog.dialog( "close" );
+		        }
+		      },
+		      close: function() {
+		
+		        allFields.removeClass( "ui-state-error" );
+		      }
+		    });
+		 
+		    form = dialog.find( "form" );
+		 
+		    $( "#irasas" ).button().on( "click", function() {
+		      dialog.dialog( "open" );
+		    });
+		    
+		    $( '.pakeisti' ).each( function () {
+	    
+	    	$( this ).click( function() {
+	    
+		    	id= $( this ).parent().parent().data( 'idx' );
+		    	
+		    	alert ( id );
+		     
+		   		$.ajax({
+			
+					url: "http://localhost:8080/ajax/pastatai?id=" + id
+									
+				}).done( 
+				
+					function ( pastatas ) {
+					
+						console.log ( pastatas ); 
+					
+						$( '#idr' ).val( pastatai.id  )
+						$( "#adresas" ).val(pastatai.adresas)
+					    $( "#aukstu_sk" ).val(pastatai.aukstu_sk)
+					    $("#kvad_gyv").val(pastatai.kvad_gyv)
+					    $("#kvad_kom").val(pastatai.kvad_kom)
+					    kaina_nuo_gyv: $("#kaina_nuo_gyv").val(pastatai.kaina_nuo_gyv)
+					    $("#kaina_nuo_kom").val(pastatai.kaina_nuo_kom)
+					    $("#kaina_iki_gyv").val(pastatai.kaina_iki_gyv)
+					    $("#kaina_iki_kom").val(pastatai.kaina_iki_kom)
+					    $("#id_rajono").val(pastatai.id_rajono)					
+						$ ('#irasas' ).val ( 'pakeisti' ); 	
+						dialog.dialog( "open" );					
+					}
+				);
+			}); 
+	    });
+	    
+
+	});
+</script>
+<body>
+<div>
+<h3> Pastatai</h3>
+
+ 	<input type="button" id="irasas" value="papildyti">
+	<div id="dialog-form" class="forma" title="pastatas">	
+		<form id="frm_rajonas" method="post" action="">
+		<label for="pav">Adresas</label>
+		<input type="text" id="adresas" name="adresas">
+		<label for="pav">Akštų skaičius</label>
+		<input type="text" id="aukstu_sk" name="aukstu_sk">
+		<label for="pav">Kvadratų gyvenamo ploto</label>
+		<input type="text" id="kvad_gyv" name="kvad_gyv">
+		<label for="pav">Kvadratų komercinio ploto</label>
+		<input type="text" id="kvad_kom" name="kvad_kom">
+		<label for="pav">Kaina kvadrato gyvenamo ploto, minimum</label>
+		<input type="text" id="kaina_nuo_gyv" name="kaina_nuo_gyv">
+		<label for="pav">Kaina kvadrato komercinio ploto, minimum</label>
+		<input type="text" id="kaina_nuo_kom" name="kaina_nuo_kom">
+		<label for="pav">Kaina kvadrato gyvenamo ploto, maksimum</label>
+		<input type="text" id="kaina_iki_gyv" name="kaina_iki_gyv">
+		<label for="pav">Kaina kvadrato komercinio ploto, maksimum</label>
+		<input type="text" id="kaina_iki_kom" name="kaina_iki_kom">		
+		<input type="hidden" name="irasas" id="irasas" value="papildyti">
+		<div id="sel_place">
+		</div>
+		
+      <!-- Allow form submission with keyboard without duplicating the dialog button -->
+      <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">						
+	</form>
+	</div>
+</div>
+<div id="display">
+
+
+</div>
+<div id="lenta">
+
+</div>
+
+ 	</body>
+</html>
