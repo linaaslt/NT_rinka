@@ -218,5 +218,40 @@ import org.springframework.web.bind.annotation.ResponseBody;
 			 		}	
 			 	} 	   	
 		     return msg;
-		 }		 
+		 }
+
+	    @RequestMapping("/pastatas-redaguoti")		
+	    public @ResponseBody String pastatasRedaguoti(
+	    		@RequestParam(required=false) String id
+	    		, @RequestParam(required=false) String adresas	
+	    		, @RequestParam(required=false) String aukstu_sk			    		
+	    		, @RequestParam(required=false) String kvad_gyv
+	    		, @RequestParam(required=false) String kvad_kom	
+	    		, @RequestParam(required=false) String kaina_nuo_gyv			    		
+	    		, @RequestParam(required=false) String kaina_nuo_kom
+	    		, @RequestParam(required=false) String kaina_iki_gyv			    		
+	    		, @RequestParam(required=false) String kaina_iki_kom
+	    		, @RequestParam(required=false) String id_rajono
+	    		, @RequestParam(required=false) String irasas
+
+	    	) {
+			 
+			 	String msg = "nieks neatlikta";
+			 
+			 	if ( ( irasas != null ) &&  irasas.equals ( "redaguoti" ) ) {
+			 		
+			 		Optional<Pastatai> op_pastatai = pastatai_repository.findById( FormPrepare.takeId ( id ) );
+				 		
+			 		
+			 		if ( ! op_pastatai.isEmpty() ) {
+			 			
+				 		msg = "irašas surastas, trinam";
+				 		
+				 		Pastatai pastatas = op_pastatai.get();
+				 		pastatai_repository.save( pastatas );
+			 		}	
+			 	   	
+			 	}	
+			 	return msg;
+	   	}
 }

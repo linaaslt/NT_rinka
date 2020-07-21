@@ -35,9 +35,24 @@ public class Pastatai {
 		
 		super();
 		this.id = id;
+		
+		takeFields ( adresas, aukstu_sk, kvad_gyv,  kvad_kom, kaina_nuo_gyv, kaina_nuo_kom, kaina_iki_gyv, kaina_iki_kom, id_rajono);	
+	}
+	
+	public void takeFields (
+			String adresas
+			, Integer aukstu_sk
+			, Integer kvad_gyv
+			, Integer kvad_kom
+			, Integer kaina_nuo_gyv
+			, Integer kaina_nuo_kom
+			, Integer kaina_iki_gyv
+			, Integer kaina_iki_kom
+			, Integer id_rajono) {
+		
 		this.adresas = adresas;
 		this.aukstu_sk = aukstu_sk;
-		this.kvad_gyv =kvad_gyv;
+		this.kvad_gyv = kvad_gyv;
 		this.kvad_kom = kvad_kom;
 		this.kaina_nuo_gyv = kaina_nuo_gyv;
 		this.kaina_nuo_kom = kaina_nuo_kom;

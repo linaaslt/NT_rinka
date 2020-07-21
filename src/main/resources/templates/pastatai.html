@@ -81,7 +81,8 @@ function iLentele( duomenai ) {
     for ( i = 0; i < duomenai.length; i++ ) {
  
 	    lentele +=  	 '<tr data-id="' + duomenai [ i ].id + '">';  
-	    lentele +=   		'<td><input type="button" class="del" value="&cross;"> </td>'; 	    
+	    lentele +=   		'<td><input type="button" class="del" value="&cross;"> </td>';
+	    lentele +=   		'<td><input type="button" class="edit" value="&#10000;"> </td>';	     	    
 	    lentele +=   		'<td>' + duomenai [ i ].adresas + '</td>';  
 	    lentele +=   		'<td>' + duomenai [ i ].aukstu_sk  + '</td>'; 
 	    lentele +=   		'<td>' + duomenai [ i ].kvad_gyv + '</td>';  
@@ -138,6 +139,33 @@ function delSet () {
 	    	 });
 		});
 	//	alert ( 'after del set' );
+}
+
+function editSet () {
+	$( '.edit' ).each ( function() {
+	
+			url_edit = '/ajax/pastatas-redaguoti';
+			edit_id = $( this ).parent().parent().data( 'id' );
+			
+	    
+	    	$( this ).click( function() {
+	    	    		
+				    $.ajax({
+				    
+					  method: "POST",
+					  url: url_edit,
+					  data: { 
+					  	id: edit_id
+					  	, irasas: 'redaguoti'
+					  }
+					  
+					}).done( function( msg ) {
+					  
+					    takePastatai();
+					});	    		 	
+	    	 });
+		});
+
 }
 
 function takePastatai() {
