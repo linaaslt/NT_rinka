@@ -192,7 +192,26 @@ import org.springframework.web.bind.annotation.ResponseBody;
 		 		
 			 	}	   	
 		     return msg;
-		 }	 
+		 }
+
+	    @RequestMapping("/pastatas-1")		
+	    public @ResponseBody Pastatai pastatasPaimti(
+	    		@RequestParam(required=true) String id
+	    		
+	    ) {
+	    	
+	    	Optional<Pastatai> op_pastatai = pastatai_repository.findById( FormPrepare.takeId(id) );
+	    	
+	    	Pastatai pastatas1 = new Pastatai();
+	    
+	    	if (! op_pastatai.isEmpty() ) {
+	    		
+	    		pastatas1 = op_pastatai.get();
+	    		
+	    	}
+	    	
+	    	return pastatas1; 	
+		} 
 		 
 	    @RequestMapping("/pastatas-salinti")		
 	    public @ResponseBody String pastatasSalinti(
@@ -237,6 +256,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 	    	) {
 			 
 			 	String msg = "nieks neatlikta";
+			 	
 			 
 			 	if ( ( irasas != null ) &&  irasas.equals ( "redaguoti" ) ) {
 			 		
@@ -248,6 +268,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 				 		msg = "irašas surastas, trinam";
 				 		
 				 		Pastatai pastatas = op_pastatai.get();
+				 		pastatas.takeFields(adresas, FormPrepare.takeId(aukstu_sk), FormPrepare.takeId(kvad_gyv), FormPrepare.takeId(kvad_kom), FormPrepare.takeId(kaina_nuo_gyv), FormPrepare.takeId(kaina_nuo_kom), FormPrepare.takeId(kaina_iki_gyv), FormPrepare.takeId(kaina_iki_kom), FormPrepare.takeId(id_rajono));
+				 		pastatas.setAdresas(adresas);
 				 		pastatai_repository.save( pastatas );
 			 		}	
 			 	   	

@@ -101,95 +101,30 @@ function iLentele( duomenai ) {
     return lentele;   
 }
 
-function delSet () {
+function pastatasFormFields ( pastatas ) {
 
-/*	alert_done = false;
-	
-	alert ( 'before del set' );	
-*/	
-	$( '.del' ).each ( function() {
-	
-			url_del = '/ajax/pastatas-salinti';
-			del_id = $( this ).parent().parent().data( 'id' );
+
+		$( '#adresas' ).val ( pastatas.adresas );
+		$( '#aukstu_sk' ).val ( pastatas.aukstu_sk );
+		$( '#kvad_gyv' ).val ( pastatas.kvad_gyv );
+		$( '#kvad_kom' ).val ( pastatas.kvad_kom );
+		$( '#kaina_nuo_gyv' ).val ( pastatas.kaina_nuo_gyv );
+		$( '#kaina_nuo_kom' ).val ( pastatas.kaina_nuo_kom );
+		$( '#kaina_iki_gyv' ).val ( pastatas.kaina_iki_gyv );
+		$( '#kaina_iki_kom' ).val ( pastatas.kaina_iki_kom );	
 			
-		/*	if ( ! alert_done ) {
-			
-				alert ( 'seting first record id :' + del_id );
-				alert_done = true;
-			} */		
-	    
-	    	$( this ).click( function() {
-	    	
-	    		//	alert ( 'deleting record : ' + del_id );
-	    	    		
-				    $.ajax({
-				    
-					  method: "POST",
-					  url: url_del,
-					  data: { 
-					  	id: del_id
-					  	, irasas: 'trinti'
-					  }
-					  
-					}).done( function( msg ) {
-					  
-				//	    alert( "Record deletion: " + msg );
-					    takePastatai();
-					});	    		 	
-	    	 });
-		});
-	//	alert ( 'after del set' );
+		$ ( '#irasas' ).val ( 'pakeisti' );	
 }
 
-function editSet () {
-	$( '.edit' ).each ( function() {
-	
-			url_edit = '/ajax/pastatas-redaguoti';
-			edit_id = $( this ).parent().parent().data( 'id' );
-			
-	    
-	    	$( this ).click( function() {
-	    	    		
-				    $.ajax({
-				    
-					  method: "POST",
-					  url: url_edit,
-					  data: { 
-					  	id: edit_id
-					  	, irasas: 'redaguoti'
-					  }
-					  
-					}).done( function( msg ) {
-					  
-					    takePastatai();
-					});	    		 	
-	    	 });
-		});
 
-}
-
-function takePastatai() {
-
-	$.ajax({
-	
-		url: "http://localhost:8080/ajax/lst-pastatai"
-			
-			
-		
-	}).done( function( pastatai ) {
-			
-		$( '#display' ).html  ( JSON.stringify ( pastatai ) );
-		$( '#lenta' ).html ( iLentele ( pastatai ) );
-		delSet();
-	});				
-}
 
 
 
 $( function () {
 
 
-		takePastatai();
+		takePastatai();	
+		
 
 		$.ajax({
 		
@@ -202,8 +137,8 @@ $( function () {
 			$( '#sel_place' ).html ( dropDown (rajonai, 'id_rajono', 'Parinkite rajoną: ' ) );
 				
 		});
-			
-			var dialog, form,
+
+			var dialog, dialog_action_info, form,
 		   
 		      // From http://www.whatwg.org/specs/web-apps/current-work/multipage/states-of-the-type-attribute.html#e-mail-state-%28type=email%29
 		      pastatai = $( "#pastatai" ),
@@ -227,8 +162,49 @@ $( function () {
 		      .add( kaina_iki_gyv )
 		      .add( kaina_iki_kom )
 		      .add ( id_rajono ),
-		      tips = $( ".validateTips" );
+		      tips = $( ".validateTips" )
+		  ;
+		  
+		function editSave() {
+		
+		    	alert ("pradėtas saugojimas");
+		    	
+		    	url_edit = '/ajax/pastatas-redaguoti';	
+			    $.ajax({
+			    
+				  method: "POST",
+				  url: url_edit,
+				  data: { 
+				  	id: edit_id
+				  	, irasas: 'redaguoti'
+				  }
+				  
+				}).done( function( msg ) {
+				  
+				  	$ ( '#edit_result_message' ).html( msg );
+		 		  	dialog_action_info.open();    		  	
+				    takePastatai();
+				});	
+		}
+		
+		function takePastatai() {
+		
+			$.ajax({
+			
+				url: "http://localhost:8080/ajax/lst-pastatai"
+					
+					
+				
+			}).done( function( pastatai ) {
+					
+				$( '#display' ).html  ( JSON.stringify ( pastatai ) );
+				$( '#lenta' ).html ( iLentele ( pastatai ) );
+				delSet();
+				editSet();
+			});				
+		}		  
 		 
+		 	 
 		    function updateTips( t ) {
 		      tips
 		        .text( t )
@@ -305,6 +281,17 @@ $( function () {
 		      }
 		      return valid;
 		    }
+		    
+		    
+			dialog_action_info = $( "#dialog-message" ).dialog({
+			      modal: true,
+			      autoOpen: false,
+			      buttons: {
+			        Ok: function() {
+			          $( this ).dialog( "close" );
+			        }
+			      }
+			});		    
 		 
 		    dialog = $( "#dialog-form" ).dialog({
 		    
@@ -342,7 +329,7 @@ $( function () {
 		    
 		    $( '.pakeisti' ).each( function () {
 	    
-	    	$( this ).click( function() {
+	    		$( this ).click( function() {
 	    
 		    	id= $( this ).parent().parent().data( 'idx' );
 		    	
@@ -363,7 +350,7 @@ $( function () {
 					    $( "#aukstu_sk" ).val(pastatai.aukstu_sk)
 					    $("#kvad_gyv").val(pastatai.kvad_gyv)
 					    $("#kvad_kom").val(pastatai.kvad_kom)
-					    kaina_nuo_gyv: $("#kaina_nuo_gyv").val(pastatai.kaina_nuo_gyv)
+					    $("#kaina_nuo_gyv").val(pastatai.kaina_nuo_gyv)
 					    $("#kaina_nuo_kom").val(pastatai.kaina_nuo_kom)
 					    $("#kaina_iki_gyv").val(pastatai.kaina_iki_gyv)
 					    $("#kaina_iki_kom").val(pastatai.kaina_iki_kom)
@@ -375,6 +362,69 @@ $( function () {
 			}); 
 	    });
 	    
+		function delSet () {
+		
+		/*	alert_done = false;
+			
+			alert ( 'before del set' );	
+		*/	
+			$( '.del' ).each ( function() {
+			
+					url_del = '/ajax/pastatas-salinti';
+					del_id = $( this ).parent().parent().data( 'id' );
+					
+				/*	if ( ! alert_done ) {
+					
+						alert ( 'seting first record id :' + del_id );
+						alert_done = true;
+					} */		
+			    
+			    	$( this ).click( function() {
+			    	
+			    		//	alert ( 'deleting record : ' + del_id );
+			    	    		
+						    $.ajax({
+						    
+							  method: "POST",
+							  url: url_del,
+							  data: { 
+							  	id: del_id
+							  	, irasas: 'trinti'
+							  }
+							  
+							}).done( function( msg ) {
+							  
+						//	    alert( "Record deletion: " + msg );
+							    takePastatai();
+							});	    		 	
+			    	 });
+				});
+			//	alert ( 'after del set' );
+		}
+		
+		function editSet () {
+		
+			$( '.edit' ).each ( function() {
+		
+			    	$( this ).click( function() {
+			    	
+			    			edit_id = $( this ).parent().parent().data( 'id' );
+			    	
+			    			$( '#id_pastato' ).val( edit_id );
+			    			
+						    $.ajax({
+						    
+							  method: "GET",
+							  url: '/ajax/pastatas-1?id=' + edit_id,
+							  
+							}).done( function( pastatas ) {
+							  
+							   pastatasFormFields ( pastatas )
+							   dialog.dialog( "open" );
+							});
+			    	 });
+				});
+		}	    
 
 	});
 </script>
@@ -400,7 +450,8 @@ $( function () {
 		<label for="pav">Kaina kvadrato gyvenamo ploto, maksimum</label>
 		<input type="text" id="kaina_iki_gyv" name="kaina_iki_gyv">
 		<label for="pav">Kaina kvadrato komercinio ploto, maksimum</label>
-		<input type="text" id="kaina_iki_kom" name="kaina_iki_kom">		
+		<input type="text" id="kaina_iki_kom" name="kaina_iki_kom">	
+		<input type="hidden" name="id" id="id_pastato" value="0">			
 		<input type="hidden" name="irasas" id="irasas" value="papildyti">
 		<div id="sel_place">
 		</div>
@@ -417,6 +468,14 @@ $( function () {
 <div id="lenta">
 
 </div>
-
+<div id="dialog-message" title="Edit result">
+  <p>
+    <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
+    <span id="edit_result_message"></span>
+  </p>
+  <p>
+    Pastatų sarašas yra atnaujintas.
+  </p>
+</div>
  	</body>
 </html>

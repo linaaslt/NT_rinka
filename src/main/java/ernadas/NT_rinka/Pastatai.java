@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Pastatai {
@@ -20,6 +22,10 @@ public class Pastatai {
 	private Integer kaina_iki_gyv;
 	private Integer kaina_iki_kom;
 	private Integer id_rajono;
+	
+	@ManyToOne // (fetch = FetchType.LAZY)
+    @JoinColumn(insertable=false, updatable=false,name="id_rajono")
+	private Rajonai rajonai;
 	
 	public Pastatai (
 			Integer id
