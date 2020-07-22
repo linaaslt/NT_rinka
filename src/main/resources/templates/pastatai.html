@@ -103,7 +103,7 @@ function iLentele( duomenai ) {
 
 function pastatasFormFields ( pastatas ) {
 
-
+		$ ( '#id_rajono' ).val ( pastatas.id_rajono );
 		$( '#adresas' ).val ( pastatas.adresas );
 		$( '#aukstu_sk' ).val ( pastatas.aukstu_sk );
 		$( '#kvad_gyv' ).val ( pastatas.kvad_gyv );
@@ -169,7 +169,7 @@ $( function () {
 		
 		    	alert ("pradėtas saugojimas");
 		    	
-		    	url_edit = '/ajax/pastatas-redaguoti';	
+		    	url_edit = '/ajax/pastatas-save';	
 			    $.ajax({
 			    
 				  method: "POST",
@@ -235,7 +235,7 @@ $( function () {
 		      }
 		    }
 		 
-		    function addPastatas() {
+		    function savePastatas() {
 		      var valid = true;
 		      allFields.removeClass( "ui-state-error" );
 		 /*
@@ -257,7 +257,8 @@ $( function () {
 					  method: "POST",
 					  url: "/ajax/pastatas-save",
 					  data: { 
-					  	adresas: $( "#adresas" ).val()
+					    id: $( "#id_pastato" ).val() 
+					  	, adresas: $( "#adresas" ).val()
 					    , aukstu_sk: $( "#aukstu_sk" ).val()
 					    , kvad_gyv: $("#kvad_gyv").val()
 					    , kvad_kom: $("#kvad_kom").val()
@@ -266,7 +267,7 @@ $( function () {
 					    , kaina_iki_gyv: $("#kaina_iki_gyv").val()
 					    , kaina_iki_kom: $("#kaina_iki_kom").val()
 					    , id_rajono: $("#id_rajono").val()
-					  	, irasas: 'papildyti'
+					  	, irasas: ( $( '#id_pastato' ).val() == '0' ? 'papildyti' : 'pakeisti' )
 					  }
 				})
 					  .done( function( msg ) {
@@ -300,16 +301,8 @@ $( function () {
 		      width: 350,
 		      modal: true,
 		      buttons: {
-		        "Išsaugoti": addPastatas /*function() {
-		        
-		        	if ( addPastatas() ) {
-		        	
-		        		alert ( $('#pav').val() );
-		        	
-		        		form.submit();
-		        	}
-		        }*/,
-		        "Atšaukti": function() {
+		        "Išsaugoti": savePastatas 
+		        , "Atšaukti": function() {
 		        
 		         form[ 0 ].reset();       
 		          dialog.dialog( "close" );
@@ -323,45 +316,12 @@ $( function () {
 		 
 		    form = dialog.find( "form" );
 		 
-		    $( "#irasas" ).button().on( "click", function() {
+		    $( "#naujas" ).button().on( "click", function() {
+		    
+		     form[ 0 ].reset(); 
 		      dialog.dialog( "open" );
 		    });
-		    
-		    $( '.pakeisti' ).each( function () {
-	    
-	    		$( this ).click( function() {
-	    
-		    	id= $( this ).parent().parent().data( 'idx' );
-		    	
-		    	alert ( id );
 		     
-		   		$.ajax({
-			
-					url: "http://localhost:8080/ajax/pastatai?id=" + id
-									
-				}).done( 
-				
-					function ( pastatas ) {
-					
-						console.log ( pastatas ); 
-					
-						$( '#idr' ).val( pastatai.id  )
-						$( "#adresas" ).val(pastatai.adresas)
-					    $( "#aukstu_sk" ).val(pastatai.aukstu_sk)
-					    $("#kvad_gyv").val(pastatai.kvad_gyv)
-					    $("#kvad_kom").val(pastatai.kvad_kom)
-					    $("#kaina_nuo_gyv").val(pastatai.kaina_nuo_gyv)
-					    $("#kaina_nuo_kom").val(pastatai.kaina_nuo_kom)
-					    $("#kaina_iki_gyv").val(pastatai.kaina_iki_gyv)
-					    $("#kaina_iki_kom").val(pastatai.kaina_iki_kom)
-					    $("#id_rajono").val(pastatai.id_rajono)					
-						$ ('#irasas' ).val ( 'pakeisti' ); 	
-						dialog.dialog( "open" );					
-					}
-				);
-			}); 
-	    });
-	    
 		function delSet () {
 		
 		/*	alert_done = false;
@@ -409,6 +369,8 @@ $( function () {
 			    	$( this ).click( function() {
 			    	
 			    			edit_id = $( this ).parent().parent().data( 'id' );
+			    			
+			    			alert ( "edit_id: " + edit_id );
 			    	
 			    			$( '#id_pastato' ).val( edit_id );
 			    			
@@ -432,7 +394,7 @@ $( function () {
 <div>
 <h3> Pastatai</h3>
 
- 	<input type="button" id="irasas" value="papildyti">
+ 	<input type="button" id="naujas" value="papildyti">
 	<div id="dialog-form" class="forma" title="pastatas">	
 		<form id="frm_rajonas" method="post" action="">
 		<label for="pav">Adresas</label>
