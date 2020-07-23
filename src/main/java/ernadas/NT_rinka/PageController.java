@@ -38,7 +38,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 		
 		 @RequestMapping("/ataskaitos")	
 		 	public String ataskaitos (
-				Model model
+		 			@RequestParam(required=false,defaultValue="visi") String grupe
+		 			, @RequestParam(required=false) String miesto
+		 			, @RequestParam(required=false) String ne_miesto		 					 			
+		 			, Model model
 				) { 
 		 
 			 model.addAttribute("lst_menu", Menu.values() ); 
@@ -46,7 +49,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 			 Session session = this.sessionFactory().openSession(); // factory.getCurrentSession();			 
 			 TopPastataiAtaskaita top_pastatai_ataskaita =  new TopPastataiAtaskaita( session );
 			 
-	         model.addAttribute("lst_top_pastatai", top_pastatai_ataskaita.topPastatai() ); 		
+			 String tipas_gyvenvietes = "visi";
+			 Boolean flag_miesto = FormPrepare.takeFlag( miesto ) == 1;
+			 Boolean flag_ne_miesto = FormPrepare.takeFlag( ne_miesto ) == 1;			 
+			 
+			 if ( flag_miesto && ! flag_ne_miesto ) {
+				 
+				 tipas_gyvenvietes = "miesto";
+			 }
+			 
+			 if ( ! flag_miesto && flag_ne_miesto ) {
+				 
+				 tipas_gyvenvietes = "ne_miesto";
+			 }			 
+			 
+			 
+			 
+	         model.addAttribute("lst_top_pastatai", top_pastatai_ataskaita.topPastatai( grupe, tipas_gyvenvietes  ) ); 		
 			 		 
 			 return "ataskaitos";
 		}

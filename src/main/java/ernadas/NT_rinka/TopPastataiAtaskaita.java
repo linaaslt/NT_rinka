@@ -16,7 +16,63 @@ public class TopPastataiAtaskaita {
 		    this.em = em;
 	  }	
 	  
-	  public List<TopPastatai> topPastatai() {
+	  public List<TopPastatai> topPastatai( String grupe, String tipas_gyvenvietes ) {
+		  
+		  	String where_by_tipas = "";
+		  
+		  	if ( tipas_gyvenvietes.equals( "miesto" ) ) {
+		  		
+		  		where_by_tipas = 
+		  				" AND "
+		  				+ " 	`rajonai`.`flag_miesto`"
+		  		;
+		  	}
+		  	
+		  	if ( tipas_gyvenvietes.equals( "ne_miesto" ) ) {
+		  		
+		  		where_by_tipas = 
+		  				" AND "
+		  				+ " 	NOT `rajonai`.`flag_miesto`"
+		  		;
+		  	}
+		  	
+		  	String limit = "";
+		  	
+		  	if ( ! grupe.equals( "visi" ) ) {
+		  		
+		  		limit =
+		  			"LIMIT 1,3"
+		  		;
+		  	}
+		  	
+		  	String order_by =
+				    " ORDER BY"
+					+ " 	`apskritys`.`pav` DESC "
+				;
+		  	
+		  	if ( grupe.equals( "plota_max" ) ) {
+		  		
+		  		order_by =
+					    " ORDER BY"
+								+ " `kvad_kom` + `kvad_gyv` DESC "
+				;
+		  	}
+		  	
+		  	if ( grupe.equals( "kaina_max" ) ) {
+		  		
+		  		order_by =
+					    " ORDER BY"
+								+ " `kaina_iki_kom` + `kaina_iki_gyv` DESC "
+				;
+		  	}
+		  	
+		  	if ( grupe.equals( "kaina_min" ) ) {
+		  		
+		  		order_by =
+					    " ORDER BY"
+								+ " `kaina_nuo_kom` + `kaina_nuo_gyv`"
+				;
+		  	}		  	
 		  
 		  	String qw_top_pastatai =
 		  				
@@ -43,12 +99,11 @@ public class TopPastataiAtaskaita {
 					+ 		") "
 					+ "WHERE "
 					+ 		"1 "
-					+ "AND "
-					+  		"1" 	
+					+ where_by_tipas 	
 				+ " GROUP BY" 
 				+	   " `apskritys`.`id` "
-				+ " ORDER BY"
-				+	   " `apskritys`.`pav` DESC "
+				+ order_by
+				+ limit
 					;
 		  	System.out.println ( qw_top_pastatai );
 		    Query query = em.createNativeQuery ( qw_top_pastatai );

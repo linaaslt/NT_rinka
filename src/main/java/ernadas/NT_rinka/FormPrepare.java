@@ -44,7 +44,7 @@ public class FormPrepare {
 	
 	public static Integer takeFlag ( String flag  ) {
 		
-		Integer val = null;
+		Integer val = 0;
 		
 		if ( ( flag != null ) &&  ( ! flag.trim().equals( "" ) ) ) {
 			
