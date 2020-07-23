@@ -2,6 +2,8 @@ package ernadas.NT_rinka;
 
 import javax.persistence.EntityManagerFactory;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,16 +21,34 @@ import org.springframework.web.bind.annotation.RequestParam;
 		@Autowired
 		private RajonaiRepository rajonai_repository;
 		
-		@Autowired 
-		EntityManagerFactory  emf;	
+
 		
-		 @RequestMapping("/apie")	
-		 	public String apie (
-				// Model model
+		@Autowired 
+		EntityManagerFactory factory;	
+		
+		// @Bean
+		public SessionFactory sessionFactory() {
+
+			
+		        if (factory.unwrap(SessionFactory.class) == null) {
+		            throw new NullPointerException("factory is not a hibernate factory");
+		        }
+		        return factory.unwrap(SessionFactory.class);
+		}		
+		
+		 @RequestMapping("/ataskaitos")	
+		 	public String ataskaitos (
+				Model model
 				) { 
 		 
-			 // model.addAttribute("lst_menu", Menu.values() ); 
-			 return "apie";
+			 model.addAttribute("lst_menu", Menu.values() ); 
+			 
+			 Session session = this.sessionFactory().openSession(); // factory.getCurrentSession();			 
+			 TopPastataiAtaskaita top_pastatai_ataskaita =  new TopPastataiAtaskaita( session );
+			 
+	         model.addAttribute("lst_top_pastatai", top_pastatai_ataskaita.topPastatai() ); 		
+			 		 
+			 return "ataskaitos";
 		}
 		 
 		 @RequestMapping("/rajonai")
@@ -53,7 +73,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 			 	}
 		    	
 		    	model.addAttribute("rajonai", rajonai_repository.findAll() );
-		       // model.addAttribute("lst_menu", Menu.values() );    	
+		        model.addAttribute("lst_menu", Menu.values() );    	
 		        return "rajonai";
 		    }
 		 
@@ -77,7 +97,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 			 	}
 		    	
 		    	model.addAttribute("apskritys", apskritys_repository.findAll() );
-		       // model.addAttribute("lst_menu", Menu.values() );    	
+		        model.addAttribute("lst_menu", Menu.values() );    	
 		        return "apskritys";
 		    }
 		 
@@ -120,7 +140,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 			 	}
 		    	
 		    	model.addAttribute("pastatai", pastatai_repository.findAll() );
-		       // model.addAttribute("lst_menu", Menu.values() );    	
+		        model.addAttribute("lst_menu", Menu.values() );    	
 		        return "pastatai";
 		    }
 }

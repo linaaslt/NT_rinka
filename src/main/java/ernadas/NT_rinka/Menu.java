@@ -2,8 +2,7 @@ package ernadas.NT_rinka;
 
 public enum Menu {
 
-	Pradžia("")
-	, Apskritys("/apskritys")
+	Ataskaitos("/ataskaitos")
 	, Rajonai("/rajonai")
 	, Pastatai("/pastatai");
 	

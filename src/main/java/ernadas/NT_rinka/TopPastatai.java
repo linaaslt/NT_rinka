@@ -1,0 +1,127 @@
+package ernadas.NT_rinka;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import java.io.Serializable;
+
+
+public class TopPastatai implements Serializable  {
+
+	private String apskritis;
+	
+	private Integer kvad_kom;
+	private Integer kaina_nuo_kom;
+	private Integer kaina_iki_kom;	
+
+	private Integer kvad_gyv;
+	private Integer kaina_nuo_gyv;
+	private Integer kaina_iki_gyv;
+	
+	private Integer flag_miesto;
+	
+	private String fld_delim = " ";
+	
+	public TopPastatai() {
+		
+	}
+
+	public String getApskritis() {
+		return apskritis;
+	}
+
+
+	public void setApskritis(String apskritis) {
+		
+		this.apskritis = apskritis;
+	}
+
+	public Integer getKvad_gyv() {
+		return kvad_gyv;
+	}
+
+
+	public void setKvad_gyv(Integer kvad_gyv) {
+		this.kvad_gyv = kvad_gyv;
+	}
+
+
+	public Integer getKvad_kom() {
+		return kvad_kom;
+	}
+
+
+	public void setKvad_kom(Integer kvad_kom) {
+		this.kvad_kom = kvad_kom;
+	}
+
+
+	public Integer getKaina_nuo_gyv() {
+		return kaina_nuo_gyv;
+	}
+
+
+	public void setKaina_nuo_gyv(Integer kaina_nuo_gyv) {
+		this.kaina_nuo_gyv = kaina_nuo_gyv;
+	}
+
+
+	public Integer getKaina_nuo_kom() {
+		return kaina_nuo_kom;
+	}
+
+
+	public void setKaina_nuo_kom(Integer kaina_nuo_kom) {
+		this.kaina_nuo_kom = kaina_nuo_kom;
+	}
+
+
+	public Integer getKaina_iki_gyv() {
+		return kaina_iki_gyv;
+	}
+
+
+	public void setKaina_iki_gyv(Integer kaina_iki_gyv) {
+		this.kaina_iki_gyv = kaina_iki_gyv;
+	}
+
+
+	public Integer getKaina_iki_kom() {
+		return kaina_iki_kom;
+	}
+
+	public void setKaina_iki_kom(Integer kaina_iki_kom) {
+		this.kaina_iki_kom = kaina_iki_kom;
+	}
+	
+	public void setFld_delim ( String fld_delim ) {
+		
+		this.fld_delim = fld_delim;
+	}
+
+	
+	public Integer getFlag_miesto() {
+		return flag_miesto;
+	}
+
+
+	public void setFlag_miesto(Integer flag_miesto) {
+		this.flag_miesto = flag_miesto;
+	}
+
+
+	public String toString () {
+		
+		return 
+
+				 this.apskritis
+				+ fld_delim + this.kvad_gyv
+				+ fld_delim + this.kvad_kom
+				+ fld_delim + this.kaina_nuo_gyv
+				+ fld_delim + this.kaina_nuo_kom
+				+ fld_delim + this.kaina_iki_gyv
+				+ fld_delim + this.kaina_iki_kom
+
+			;
+	}
+	
+}

@@ -267,13 +267,16 @@ $( function () {
 <body>
 <div>
 <h3> Apie programą</h3>
+	<nav>
+		<a th:each="menu_item : ${lst_menu}" th:href="${menu_item.itemurl()}" th:text="${menu_item}"></a>
+	</nav>
 
  	Programa skirta tvarkyti NT objektus doumenų bazėje. Juos galima redaguoti, parduoti.
  	<input type="button" id="irasas" value="papildyti">
 	<div id="dialog-form" class="forma" title="rajonas">	
 		<form id="frm_rajonas" method="post" action="">
 		<label for="pav">Ar mieste</label>
-		<input type="checkbox" id="flag_mieste" name="flag_mieste" inputValue="1">
+		<input type="checkbox" id="flag_miesto" name="flag_miesto" inputValue="1">
 		<div id="sel_place">
 		</div>
 		<label for="pav">Pavadinimas</label>

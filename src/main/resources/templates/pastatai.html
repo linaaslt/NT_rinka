@@ -67,6 +67,7 @@ function iLentele( duomenai ) {
 	lentele = '<table id="dataTable">';   
     lentele +=  	 '<tr>';
     lentele +=   		'<th>Veiksmai</th>';  
+    lentele +=   		'<th>Rajonas</th>';     
     lentele +=   		'<th>Adresas</th>';  
     lentele +=   		'<th>Aukstu skaičius</th>';  
     lentele +=   		'<th>Kvadratų gyvenamo ploto</th>';
@@ -82,7 +83,8 @@ function iLentele( duomenai ) {
  
 	    lentele +=  	 '<tr data-id="' + duomenai [ i ].id + '">';  
 	    lentele +=   		'<td><input type="button" class="del" value="&cross;"> </td>';
-	    lentele +=   		'<td><input type="button" class="edit" value="&#10000;"> </td>';	     	    
+	    lentele +=   		'<td><input type="button" class="edit" value="&#10000;"> </td>';
+	    lentele +=   		'<td>' + duomenai [ i ].rajonai.pav + '</td>';  	    	     	    
 	    lentele +=   		'<td>' + duomenai [ i ].adresas + '</td>';  
 	    lentele +=   		'<td>' + duomenai [ i ].aukstu_sk  + '</td>'; 
 	    lentele +=   		'<td>' + duomenai [ i ].kvad_gyv + '</td>';  
@@ -393,7 +395,9 @@ $( function () {
 <body>
 <div>
 <h3> Pastatai</h3>
-
+	<nav>
+		<a th:each="menu_item : ${lst_menu}" th:href="${menu_item.itemurl()}" th:text="${menu_item}"></a>
+	</nav>
  	<input type="button" id="naujas" value="papildyti">
 	<div id="dialog-form" class="forma" title="pastatas">	
 		<form id="frm_rajonas" method="post" action="">

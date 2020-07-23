@@ -23,6 +23,14 @@ public class Pastatai {
 	private Integer kaina_iki_kom;
 	private Integer id_rajono;
 	
+	public Rajonai getRajonai() {
+		return rajonai;
+	}
+
+	public void setRajonai(Rajonai rajonai) {
+		this.rajonai = rajonai;
+	}
+
 	@ManyToOne // (fetch = FetchType.LAZY)
     @JoinColumn(insertable=false, updatable=false,name="id_rajono")
 	private Rajonai rajonai;
