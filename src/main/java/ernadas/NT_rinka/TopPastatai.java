@@ -8,6 +8,7 @@ import java.io.Serializable;
 public class TopPastatai implements Serializable  {
 
 	private String apskritis;
+	private String apksrities_id;
 	
 	private Integer kvad_kom;
 	private Integer kaina_nuo_kom;
@@ -23,6 +24,14 @@ public class TopPastatai implements Serializable  {
 	
 	public TopPastatai() {
 		
+	}
+
+	public String getApksrities_id() {
+		return apksrities_id;
+	}
+
+	public void setApksrities_id(String apksrities_id) {
+		this.apksrities_id = apksrities_id;
 	}
 
 	public String getApskritis() {
@@ -108,20 +117,13 @@ public class TopPastatai implements Serializable  {
 		this.flag_miesto = flag_miesto;
 	}
 
-
-	public String toString () {
-		
-		return 
-
-				 this.apskritis
-				+ fld_delim + this.kvad_gyv
-				+ fld_delim + this.kvad_kom
-				+ fld_delim + this.kaina_nuo_gyv
-				+ fld_delim + this.kaina_nuo_kom
-				+ fld_delim + this.kaina_iki_gyv
-				+ fld_delim + this.kaina_iki_kom
-
-			;
+	@Override
+	public String toString() {
+		return "TopPastatai [apskritis=" + apskritis + ", apksrities_id=" + apksrities_id + ", kvad_kom=" + kvad_kom
+				+ ", kaina_nuo_kom=" + kaina_nuo_kom + ", kaina_iki_kom=" + kaina_iki_kom + ", kvad_gyv=" + kvad_gyv
+				+ ", kaina_nuo_gyv=" + kaina_nuo_gyv + ", kaina_iki_gyv=" + kaina_iki_gyv + ", flag_miesto="
+				+ flag_miesto + ", fld_delim=" + fld_delim + "]";
 	}
 	
+
 }

@@ -1,7 +1,12 @@
 package ernadas.NT_rinka;
 
+import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityManagerFactory;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,7 +31,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 		@Autowired
 		private RajonaiRepository rajonai_repository;
 		
-	
+		@Autowired 
+		EntityManagerFactory factory;	
+		
+		// @Bean
+		public SessionFactory sessionFactory() {
+
+			
+		        if (factory.unwrap(SessionFactory.class) == null) {
+		            throw new NullPointerException("factory is not a hibernate factory");
+		        }
+		        return factory.unwrap(SessionFactory.class);
+		}				   	
 		
 		
 		@GetMapping(path="/lst-rajonai")
@@ -258,4 +274,32 @@ import org.springframework.web.bind.annotation.ResponseBody;
 			 	} 	   	
 		     return msg;
 		 }
+	    
+		 @RequestMapping("/ataskaitos-apskrities")	
+		 	public @ResponseBody List<TopPastatai> ataskaitosApskrities (
+		 			@RequestParam(required=false,defaultValue="visi") String id
+		 			, @RequestParam(required=false,defaultValue="visi") String grupe
+		 			, @RequestParam(required=false) String miesto
+		 			, @RequestParam(required=false) String ne_miesto
+				) { 
+			 
+			 Session session = this.sessionFactory().openSession(); // factory.getCurrentSession();			 
+			 TopPastataiAtaskaita top_pastatai_ataskaita =  new TopPastataiAtaskaita( session );
+			 
+			 String tipas_gyvenvietes = "visi";
+			 Boolean flag_miesto = FormPrepare.takeFlag( miesto ) == 1;
+			 Boolean flag_ne_miesto = FormPrepare.takeFlag( ne_miesto ) == 1;			 
+			 
+			 if ( flag_miesto && ! flag_ne_miesto ) {
+				 
+				 tipas_gyvenvietes = "miesto";
+			 }
+			 
+			 if ( ! flag_miesto && flag_ne_miesto ) {
+				 
+				 tipas_gyvenvietes = "ne_miesto";
+			 }			 
+			 	 
+	         return top_pastatai_ataskaita.topPastatai( grupe, tipas_gyvenvietes, FormPrepare.takeId ( id ) ); 		
+		}	    
 }

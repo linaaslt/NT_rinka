@@ -40,7 +40,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 		 	public String ataskaitos (
 		 			@RequestParam(required=false,defaultValue="visi") String grupe
 		 			, @RequestParam(required=false) String miesto
-		 			, @RequestParam(required=false) String ne_miesto		 					 			
+		 			, @RequestParam(required=false) String ne_miesto
 		 			, Model model
 				) { 
 		 
@@ -62,12 +62,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 				 
 				 tipas_gyvenvietes = "ne_miesto";
 			 }			 
-			 
-			 
-			 
-	         model.addAttribute("lst_top_pastatai", top_pastatai_ataskaita.topPastatai( grupe, tipas_gyvenvietes  ) ); 		
+			 	 
+	         model.addAttribute("lst_top_pastatai", top_pastatai_ataskaita.topPastatai( grupe, tipas_gyvenvietes, 0 ) ); 		
 			 		 
 			 return "ataskaitos";
+		}
+		 
+		 @RequestMapping("/ataskaitos-apskrities")	
+		 	public String ataskaitosApskrities (
+		    		@RequestParam(required=false) String id_apskrit	  
+		 			, Model model
+				) { 
+		 
+			 model.addAttribute("lst_menu", Menu.values() ); 		
+			 		 
+			 return "ataskaitosRajono";
 		}
 		 
 		 @RequestMapping("/rajonai")

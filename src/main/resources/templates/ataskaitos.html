@@ -91,14 +91,14 @@ Ar kaime: <input type="checkbox" name="ne_miesto" value="1">
 		</th>
 	</tr>
 	
-	<tr th:each="top_pastatas : ${lst_top_pastatai}">
-					<td th:text="${top_pastatas[0]}"></td>								
-					<td th:text="${top_pastatas[1]}"></td>				
-					<td th:text="${top_pastatas[2]}"></td>
-					<td th:text="${top_pastatas[3]}"></td>
-					<td th:text="${top_pastatas[4]}"></td>
+	<tr th:each="top_pastatas : ${lst_top_pastatai}" >
+					<td><a th:href="@{/ataskaitos-apskrities(id_apskrit=${top_pastatas[1]})}" th:text="${top_pastatas[0]}"></a></td>								
+					<td th:text="${top_pastatas[4]}"></td>				
 					<td th:text="${top_pastatas[5]}"></td>
 					<td th:text="${top_pastatas[6]}"></td>
+					<td th:text="${top_pastatas[7]}"></td>
+					<td th:text="${top_pastatas[8]}"></td>
+					<td th:text="${top_pastatas[9]}"></td>
 				</tr>
 </table>
  	</body>

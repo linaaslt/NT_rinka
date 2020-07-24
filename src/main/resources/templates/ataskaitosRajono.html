@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title> Rajono ataskaitos </title>
+	  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	  <link rel="stylesheet" href="jqueryui.css">
+	<style>
+		h3 {
+	 		text-align:center;
+		}
+		
+		nav a {
+		display: inline-block;
+		padding: 12px;
+		margin: 12px;
+		text-decoration: none;
+		color: Black;
+		background-color: #CAB85C;
+		-webkit-border-radius: 8px;
+		-moz-border-radius: 8px;
+		border-radius: 8px;		
+		-webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+		-moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+		box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);		
+	}
+	nav a:hover {
+		text-decoration: underline;	
+		background-color: #E3F392;	
+	}
+	
+	div {
+		 margin: auto;
+		  width: 50%;
+		  padding: 10px;
+	}
+	body {
+	
+		background-color: #F4F6F6; 
+		text-align:center;
+		}	
+	</style>
+	
+<script
+		src="https://code.jquery.com/jquery-3.4.1.min.js"
+		integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+		crossorigin="anonymous">
+</script>
+<script>
+	names_struct = [ 'apskritis', 'apskrities_id', 'rajonas', 'rajono_id', 
+					'kvad_kom' ,'kaina_nuo_kom' ,'kaina_iki_kom' ,'kvad_gyv', 'kaina_nuo_gyv' ,'kaina_iki_gyv', 'flag_miesto' ];
+	
+	function makeListHtml( duom_rajono ) {
+
+			list_html = '<table>';
+			list_html += '	<tr>';
+			list_html += '		<th>';
+			list_html += '			Rajonas';
+			list_html += '		</th>';
+			list_html += '		<th>';
+			list_html += 'kom.<br>pastatų<br>plotas';
+			list_html += '</th>';
+			list_html += '<th>';
+			list_html += 'kaina<br> nuo';
+			list_html += '</th>';
+			list_html += '<th>';
+			list_html += '			kaina<br> iki';
+			list_html += '</th>';		
+			list_html += '<th>';
+			list_html += 'gyv.<br>pastatų<br>plotas';
+			list_html += '</th>';
+			list_html += '<th>';
+			list_html += 'kaina<br> nuo';
+			list_html += '</th>';
+			list_html += '<th>';
+			list_html += 'kaina<br> iki';
+			list_html += '</th>';
+			list_html += '</tr>';
+	
+			for ( i = 0; i < duom_rajono.length; i++  ) {
+	
+				list_html += '<tr>';
+				list_html += '<td>' + duom_rajono[ i ].rajonas + '</td>';								
+				list_html += '<td>' + duom_rajono[ i ].kvad_kom + '</td>';				
+				list_html += '<td>' + duom_rajono[ i ].kaina_nuo_kom + '</td>';
+				list_html += '<td>' + duom_rajono[ i ].kaina_iki_kom + '</td>';
+				list_html += '<td>' + duom_rajono[ i ].kvad_gyv + '</td>';
+				list_html += '<td>' + duom_rajono[ i ].kaina_nuo_gyv + '</td>';
+				list_html += '<td>' + duom_rajono[ i ].kaina_iki_gyv + '</td>';
+				list_html += '</tr>';
+			}
+			list_html += '</table>';
+			
+		return list_html;
+	}
+	
+	function toStruct( names, duom_arr ) {
+	
+		new_struct = [];
+		
+		for ( i = 0; i < duom_arr.length; i++  ) {
+		
+			new_struct1 = new Object();
+		
+			for( t = 0; t < names.length; t++ ) {
+			
+				new_struct1 [ names [ t ] ] = duom_arr [ i ] [ t ];
+			}
+			new_struct.push ( new_struct1 );
+		}
+		return new_struct;
+	}
+	
+	function takeApskritis() {
+	
+		const queryString = window.location.search;
+		
+		console.log(queryString);
+	
+		const urlParams = new URLSearchParams(queryString);	
+		
+		const id_apskrit = urlParams.get('id_apskrit');	
+	
+		$.ajax({
+		
+			url: "http://localhost:8080/ajax//ataskaitos-apskrities?id=" + id_apskrit
+	
+		}).done( function( apskritis ) {
+				
+			// $( '#list' ).html  ( JSON.stringify ( toStruct ( names_struct, apskritis ) ) );
+			$( '#list' ).html ( makeListHtml( toStruct ( names_struct, apskritis ) ) );
+		});
+	}
+	$( document ).ready ( function() {
+	
+		takeApskritis();
+	}); 	
+</script>		
+</head>
+<body>
+	<nav>
+		<a th:each="menu_item : ${lst_menu}" th:href="${menu_item.itemurl()}" th:text="${menu_item}"></a>
+	</nav>
+
+<h3> Rajono ataskaitos </h3>
+<form id="frm_rusiuoti" method="post" action="">
+<input type="radio" name="grupe" value="plota_max">Pagal ploto max<br>
+<input type="radio" name="grupe" value="kaina_max">Pagal kainos iki max<br>
+<input type="radio" name="grupe" value="kaina_min">Pagal kaina nuo min<br>
+<input type="radio" name="grupe" value="visi">Visos apskritys<br>
+Ar mieste: <input type="checkbox" name="miesto" value="1">
+Ar kaime: <input type="checkbox" name="ne_miesto" value="1">
+<input type="submit"  name="atrinkti" value="atrinkti">
+</form>
+</div>
+<div id="list">
+</div>
+ 	</body>
+</html>

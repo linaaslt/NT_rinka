@@ -16,7 +16,7 @@ public class TopPastataiAtaskaita {
 		    this.em = em;
 	  }	
 	  
-	  public List<TopPastatai> topPastatai( String grupe, String tipas_gyvenvietes ) {
+	  public List<TopPastatai> topPastatai( String grupe, String tipas_gyvenvietes, Integer id_apskrities ) {
 		  
 		  	String where_by_tipas = "";
 		  
@@ -27,6 +27,20 @@ public class TopPastataiAtaskaita {
 		  				+ " 	`rajonai`.`flag_miesto`"
 		  		;
 		  	}
+		  	
+		  	String where_by_apskritis = "";
+		  	
+		  	String pav_table = "apskritys";		  	
+			  
+		  	if ( id_apskrities > 0 ) {
+		  		
+		  		pav_table = "rajonai";
+		  		
+		  		where_by_apskritis = 
+		  				" AND "
+		  				+ " 	`apskritys`.`id`=" + id_apskrities
+		  		;
+		  	}		  	
 		  	
 		  	if ( tipas_gyvenvietes.equals( "ne_miesto" ) ) {
 		  		
@@ -45,9 +59,13 @@ public class TopPastataiAtaskaita {
 		  		;
 		  	}
 		  	
+
+		  	
+
+		  	
 		  	String order_by =
 				    " ORDER BY"
-					+ " 	`apskritys`.`pav` DESC "
+					+ " 	`" + pav_table + "`.`pav` DESC "
 				;
 		  	
 		  	if ( grupe.equals( "plota_max" ) ) {
@@ -78,6 +96,9 @@ public class TopPastataiAtaskaita {
 		  				
 		  		"SELECT SQL_CALC_FOUND_ROWS " 
 					+ 	" `apskritys`.`pav` AS `apskritis` "
+		  			+	", `apskritys`.`id` AS `apskrities_id` "
+					+ 	", `rajonai`.`pav` AS `rajonas` "
+		  			+	", `rajonai`.`id` AS `rajono_id` "
 					+ 	", SUM(`pastatai`.`kvad_kom`) AS `kvad_kom` "
 					+ 	", MIN(`pastatai`.`kaina_nuo_kom`) AS `kaina_nuo_kom` "
 					+ 	", MAX(`pastatai`.`kaina_iki_kom`) AS `kaina_iki_kom` "	
@@ -99,9 +120,10 @@ public class TopPastataiAtaskaita {
 					+ 		") "
 					+ "WHERE "
 					+ 		"1 "
-					+ where_by_tipas 	
+					+ where_by_tipas 
+					+ where_by_apskritis
 				+ " GROUP BY" 
-				+	   " `apskritys`.`id` "
+				+	   " `" + pav_table + "`.`id` "
 				+ order_by
 				+ limit
 					;
