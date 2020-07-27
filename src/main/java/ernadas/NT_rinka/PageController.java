@@ -70,12 +70,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 		 
 		 @RequestMapping("/ataskaitos-apskrities")	
 		 	public String ataskaitosApskrities (
-		    		@RequestParam(required=false) String id_apskrit	  
+		    		@RequestParam(required=false) String id_apskrit
 		 			, Model model
 				) { 
 		 
-			 model.addAttribute("lst_menu", Menu.values() ); 		
-			 		 
+			
+			 model.addAttribute("lst_menu", Menu.values() ); 	
 			 return "ataskaitosRajono";
 		}
 		 

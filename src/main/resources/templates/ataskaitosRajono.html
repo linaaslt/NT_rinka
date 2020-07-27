@@ -117,13 +117,21 @@
 		
 		console.log(queryString);
 	
-		const urlParams = new URLSearchParams(queryString);	
+		const urlParams = new URLSearchParams ( queryString );	
 		
 		const id_apskrit = urlParams.get('id_apskrit');	
 	
 		$.ajax({
 		
-			url: "http://localhost:8080/ajax//ataskaitos-apskrities?id=" + id_apskrit
+			url: "http://localhost:8080/ajax/ataskaitos-apskrities?id_apskrit=" + id_apskrit,
+			method: "POST",
+			data: { 						
+		 			 	grupe: $("input[name='grupe']:checked").val(),
+		 				miesto: ( $('#miesto' ).is( ':checked' ) ? '1' : '0' ),
+		 			 	ne_miesto: ( $( '#ne_miesto' ).is( ':checked' ) ? '1' : '0' ),
+						irasas: 'atrinkti'
+					  }
+					  
 	
 		}).done( function( apskritis ) {
 				
@@ -134,6 +142,13 @@
 	$( document ).ready ( function() {
 	
 		takeApskritis();
+		
+		$( '#atrinkti' ).click ( function() {
+		
+			alert ( 'grupe: ' +$("input[name='grupe']:checked").val() + ' miesto: ' + $('#miesto' ).is( ':checked' ) + ' ne_miesto: ' + $( '#ne_miesto' ).is( ':checked' ) );
+		
+			takeApskritis();
+		});
 	}); 	
 </script>		
 </head>
@@ -148,9 +163,9 @@
 <input type="radio" name="grupe" value="kaina_max">Pagal kainos iki max<br>
 <input type="radio" name="grupe" value="kaina_min">Pagal kaina nuo min<br>
 <input type="radio" name="grupe" value="visi">Visos apskritys<br>
-Ar mieste: <input type="checkbox" name="miesto" value="1">
-Ar kaime: <input type="checkbox" name="ne_miesto" value="1">
-<input type="submit"  name="atrinkti" value="atrinkti">
+Ar mieste: <input type="checkbox" id="miesto" value="1">
+Ar kaime: <input type="checkbox" id="ne_miesto" value="1">
+<input type="button" id="atrinkti"  name="atrinkti" value="atrinkti">
 </form>
 </div>
 <div id="list">

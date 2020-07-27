@@ -277,7 +277,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 	    
 		 @RequestMapping("/ataskaitos-apskrities")	
 		 	public @ResponseBody List<TopPastatai> ataskaitosApskrities (
-		 			@RequestParam(required=false,defaultValue="visi") String id
+		 			@RequestParam(required=true) String id_apskrit
 		 			, @RequestParam(required=false,defaultValue="visi") String grupe
 		 			, @RequestParam(required=false) String miesto
 		 			, @RequestParam(required=false) String ne_miesto
@@ -300,6 +300,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 				 tipas_gyvenvietes = "ne_miesto";
 			 }			 
 			 	 
-	         return top_pastatai_ataskaita.topPastatai( grupe, tipas_gyvenvietes, FormPrepare.takeId ( id ) ); 		
+	         return top_pastatai_ataskaita.topPastatai( grupe, tipas_gyvenvietes, FormPrepare.takeId ( id_apskrit ) ); 		
 		}	    
 }
