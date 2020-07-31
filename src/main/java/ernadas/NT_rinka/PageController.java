@@ -79,6 +79,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 			 return "ataskaitosRajono";
 		}
 		 
+		 @RequestMapping("/ataskaitos-rajono")	
+		 	public String ataskaitosRajono (
+		    		@RequestParam(required=false) String id_rajono
+		 			, Model model
+				) { 
+		 
+			
+			 model.addAttribute("lst_menu", Menu.values() ); 	
+			 return "ataskaitosRajonas";
+		}
+		 
 		 @RequestMapping("/rajonai")
 		    public String rajonai(
 		    		@RequestParam(required=false) String id	    		

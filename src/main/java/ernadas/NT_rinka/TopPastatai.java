@@ -9,6 +9,8 @@ public class TopPastatai implements Serializable  {
 
 	private String apskritis;
 	private String apksrities_id;
+	private String rajonas;
+	private String rajono_id;
 	
 	private Integer kvad_kom;
 	private Integer kaina_nuo_kom;
@@ -42,6 +44,22 @@ public class TopPastatai implements Serializable  {
 	public void setApskritis(String apskritis) {
 		
 		this.apskritis = apskritis;
+	}
+
+	public String getRajonas() {
+		return rajonas;
+	}
+
+	public void setRajonas(String rajonas) {
+		this.rajonas = rajonas;
+	}
+
+	public String getRajono_id() {
+		return rajono_id;
+	}
+
+	public void setRajono_id(String rajono_id) {
+		this.rajono_id = rajono_id;
 	}
 
 	public Integer getKvad_gyv() {

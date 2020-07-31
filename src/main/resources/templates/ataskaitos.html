@@ -38,7 +38,13 @@
 	
 		background-color: #F4F6F6; 
 		text-align:center;
-		}	
+		}
+		
+	#grafikas {
+	
+		border: 1px solid blue;
+	
+	}		
 	</style>
 	
 <script
@@ -46,8 +52,30 @@
 		integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
 		crossorigin="anonymous">
 </script>
+<script src="mle.js"></script>
+<script src="paint.js"></script>
 <script>
-
+	$( document ).ready( function() {
+	
+		$.ajax({
+		
+			url: "http://localhost:8080/ajax/ataskaitos",
+			method: "POST",
+			data: { 						
+		 			 	grupe: $("input[name='grupe']:checked").val(),
+		 				miesto: ( $('#miesto' ).is( ':checked' ) ? '1' : '0' ),
+		 			 	ne_miesto: ( $( '#ne_miesto' ).is( ':checked' ) ? '1' : '0' ),
+						irasas: 'atrinkti'
+					  }
+					  
+	
+		}).done( function( ataskaita ) {
+				
+			ataskaitax = toStruct ( names_struct, ataskaita );
+			
+			Paint ( 'grafikas', 500, 500, ataskaitax, 'apskritis', 'kvad_kom', 'linear' );
+		});		
+	});
 </script>		
 </head>
 <body>
@@ -92,7 +120,7 @@ Ar kaime: <input type="checkbox" name="ne_miesto" value="1">
 	</tr>
 	
 	<tr th:each="top_pastatas : ${lst_top_pastatai}" >
-					<td><a th:href="@{/ataskaitos-apskrities(id_apskrit=${top_pastatas[1]})}" th:text="${top_pastatas[0]}"></a></td>								
+					<td><a th:href="@{/ataskaitos-apskrities(id_apskrit=${top_pastatas[1]})}" th:text="${top_pastatas[0]}"></a></td>					
 					<td th:text="${top_pastatas[4]}"></td>				
 					<td th:text="${top_pastatas[5]}"></td>
 					<td th:text="${top_pastatas[6]}"></td>
@@ -101,5 +129,7 @@ Ar kaime: <input type="checkbox" name="ne_miesto" value="1">
 					<td th:text="${top_pastatas[9]}"></td>
 				</tr>
 </table>
+	<canvas id="grafikas" width="500" height="500">
+	</canvas>
  	</body>
 </html>

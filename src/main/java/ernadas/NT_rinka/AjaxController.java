@@ -70,6 +70,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 			
 			return rajonai1;
 		}	
+		 
 		
 		@GetMapping(path="/lst-apskritys")
 		public @ResponseBody Iterable<Apskritys> getAllApskritys() {
@@ -160,7 +161,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 				return pastatai1;
 			}	
 
-
+	
 		 @RequestMapping("/pastatas-save")
 		
 		    public @ResponseBody String pastatasSave(
@@ -301,5 +302,32 @@ import org.springframework.web.bind.annotation.ResponseBody;
 			 }			 
 			 	 
 	         return top_pastatai_ataskaita.topPastatai( grupe, tipas_gyvenvietes, FormPrepare.takeId ( id_apskrit ) ); 		
-		}	    
+		}	
+
+		 @RequestMapping("/ataskaitos")	
+		 	public @ResponseBody List<TopPastatai> ataskaitos (
+		 			@RequestParam(required=false,defaultValue="visi") String grupe
+		 			, @RequestParam(required=false) String miesto
+		 			, @RequestParam(required=false) String ne_miesto
+				) { 
+			 
+			 Session session = this.sessionFactory().openSession(); // factory.getCurrentSession();			 
+			 TopPastataiAtaskaita top_pastatai_ataskaita =  new TopPastataiAtaskaita( session );
+			 
+			 String tipas_gyvenvietes = "visi";
+			 Boolean flag_miesto = FormPrepare.takeFlag( miesto ) == 1;
+			 Boolean flag_ne_miesto = FormPrepare.takeFlag( ne_miesto ) == 1;			 
+			 
+			 if ( flag_miesto && ! flag_ne_miesto ) {
+				 
+				 tipas_gyvenvietes = "miesto";
+			 }
+			 
+			 if ( ! flag_miesto && flag_ne_miesto ) {
+				 
+				 tipas_gyvenvietes = "ne_miesto";
+			 }		 
+			 	 
+	         return top_pastatai_ataskaita.topPastatai( grupe, tipas_gyvenvietes, 0 ); 		
+		}		 
 }
